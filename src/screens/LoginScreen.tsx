@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'; // Burası deği�
 import { TextInput, Button } from 'react-native-paper';
 import { COLORS } from '../constants/colors';
 import { useAuth } from '../context/AuthContext';
+import KeyboardDismissableView from '../components/KeyboardDismissableView';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -19,7 +20,8 @@ const LoginScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <KeyboardDismissableView>
+      <SafeAreaView style={styles.container}>
       {/* Logo Alanı */}
       <View style={styles.logoContainer}>
         <Image 
@@ -42,6 +44,7 @@ const LoginScreen = () => {
           outlineColor={COLORS.lightGreen}
           activeOutlineColor={COLORS.primary}
           onChangeText={setEmail}
+          inputMode='email'
         />
         <TextInput
           label="Password"
@@ -75,6 +78,7 @@ const LoginScreen = () => {
       </View>
 
     </SafeAreaView>
+    </KeyboardDismissableView>
   );
 };
 

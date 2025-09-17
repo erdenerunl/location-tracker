@@ -1,19 +1,22 @@
 // src/screens/ProfileScreen.tsx
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity  } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Avatar, Text, Button, Divider, List } from 'react-native-paper';
 import { useAuth } from '../context/AuthContext';
 import { COLORS } from '../constants/colors';
 
-const ProfileScreen = () => {
-  // AuthContext'ten logout fonksiyonunu ve kullanıcı durumunu alıyoruz
-  const { logout, authState } = useAuth();
+const THEME_OPTIONS = [
+  COLORS.primary,   // #588157 (Yeşil)
+  '#4a4e69',        // Morumsu Gri
+  '#d62828',        // Canlı Kırmızı
+  '#f77f00',        // Turuncu
+];
 
-  // Şimdilik e-posta adresini temsili olarak gösterelim
-  // Gerçek kullanıcı e-postasını authState'ten alabiliriz,
-  // bunun için AuthContext'i güncellememiz gerekir.
-  // Şimdilik 'user@example.com' olarak bırakalım.
+const ProfileScreen = () => {
+    const { logout, authState, setThemeColor } = useAuth();
+  const { themeColor } = authState;
+
   const userEmail = 'user@example.com'; 
 
   return (
@@ -27,6 +30,25 @@ const ProfileScreen = () => {
         </View>
         
         <Divider style={styles.divider} />
+
+        {/* --- YENİ BÖLÜM: TEMA RENGİ SEÇİMİ --- */}
+        <View>
+          <Text style={styles.sectionTitle}>Map Color</Text>
+          <View style={styles.colorSelectorContainer}>
+            {THEME_OPTIONS.map((color) => (
+              <TouchableOpacity
+                key={color}
+                style={[
+                  styles.colorOption,
+                  { backgroundColor: color },
+                  // Seçili olan rengin etrafına bir çerçeve ekle
+                  themeColor === color && styles.colorOptionSelected,
+                ]}
+                onPress={() => setThemeColor(color)}
+              />
+            ))}
+          </View>
+        </View>
 
         {/* İstatistikler (İleride doldurulacak) */}
         <View style={styles.statsContainer}>
@@ -99,8 +121,30 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   divider: {
-    marginVertical: 20,
+    marginVertical: 15, // Dikey boşluğu biraz azaltalım
     backgroundColor: COLORS.lightGreen,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: COLORS.text,
+    marginBottom: 15,
+  },
+  colorSelectorContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  colorOption: {
+    width: 60,
+    height: 60,
+    borderRadius: 30, // Yuvarlak yapmak için
+    borderWidth: 2,
+    borderColor: 'transparent', // Varsayılan olarak çerçeve görünmez
+  },
+  colorOptionSelected: {
+    borderColor: COLORS.text, // Seçili olunca çerçeveyi görünür yap
+    transform: [{ scale: 1.1 }], // Seçili olana hafif bir büyüme efekti
   },
   statsContainer: {
     flexDirection: 'row',
